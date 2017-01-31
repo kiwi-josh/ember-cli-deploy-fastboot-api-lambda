@@ -1,24 +1,33 @@
 {
   "name": "ember-cli-deploy-fastboot-api-lambda",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.0.1",
+  "description": "An ambitious ember-cli-deploy plugin for serving Ember FastBoot Applications entirely from within AWS Lambda/API Gateway (assets and all!).",
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "ember-cli-deploy-plugin"
   ],
   "license": "MIT",
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wytlytningNZ/ember-cli-deploy-fastboot-api-lambda"
+  },
+  "author": "Joshua Hollinshead <joshuamarkhollinshead@gmail.com>",
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
-  "repository": "",
   "scripts": {
     "build": "ember build",
     "start": "ember server",
     "test": "ember try:each"
   },
   "dependencies": {
-    "ember-cli-babel": "^5.1.7"
+    "ember-cli-babel": "^5.1.7",
+    "aws-sdk": "^2.2.39",
+    "ember-cli-babel": "^5.1.5",
+    "ember-cli-deploy-plugin": "^0.2.2",
+    "fs-promise": "^0.5.0",
+    "rsvp": "^3.2.1"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",
@@ -49,6 +58,10 @@
     "node": ">= 0.12.0"
   },
   "ember-addon": {
-    "configPath": "tests/dummy/config"
+    "configPath": "tests/dummy/config",
+    "after": [
+      "ember-cli-deploy-lightning-pack",
+      "ember-cli-deploy-build"
+    ]
   }
 }
