@@ -80,7 +80,7 @@ Is as simple as going:
 ## Caveats
 
 Just a word of warning.. just because this architecture is possible, doesn't make it the optimal for all use-cases.
-Lambda functions suffer from a cold start delay, which can make there response times unpredictable.
+Lambda functions suffer from a cold start delay, which can make response times unpredictable.
 
 
 ## Sites using this addon
