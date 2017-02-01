@@ -120,8 +120,6 @@ exports.handler = function(event, context, callback) {
     	return result.html()
     	.then(function(html) {
 
-    		console.log('INFO: html:', html);
-
     		// 3. Create headers object
     		var headers = Object.assign(result.headers.headers, defaults.headers);
 

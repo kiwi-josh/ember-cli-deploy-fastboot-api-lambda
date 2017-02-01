@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "fastboot": "1.0.0-rc.0",
+    "fastboot": "1.0.0-rc.2",
     "fs-promise": "0.5.0",
     "mine": "0.1.0"
   }
