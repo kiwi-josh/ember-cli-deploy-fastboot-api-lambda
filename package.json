@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-deploy-fastboot-api-lambda",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An ambitious ember-cli-deploy plugin for serving Ember FastBoot Applications entirely from within AWS Lambda/API Gateway (assets and all!).",
   "keywords": [
     "ember-addon",
