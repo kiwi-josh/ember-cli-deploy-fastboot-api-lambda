@@ -13,11 +13,11 @@ var fancyACacheYeh = {
 
 var defaults = {
   distPath: 'dist',
-  path: '/',
+  fallbackPath: '/',
   protocol: 'https',
   host: 'localhost:4200',
   assetsPath: '/assets/',
-  standardExtensions: [
+  stringyExtensions: [
     'html',
     'css',
     'js',
@@ -49,11 +49,11 @@ var defaults = {
 
 // Merge config: start
 var distPath = config.distPath || defaults.distPath;
-var fallbackPath = config.defaultPath || defaults.path;
+var fallbackPath = config.fallbackPath || defaults.fallbackPath;
 var protocol = config.protocol || defaults.protocol;
 var host = config.host || defaults.host;
 var validAssetPaths = defaults.validAssetPaths.concat(config.validAssetPaths || []);
-var standardExtensions = defaults.standardExtensions.concat(config.standardExtensions || []);
+var stringyExtensions = defaults.stringyExtensions.concat(config.stringyExtensions || []);
 // Merge config: end
 
 // Instantiate Fastboot server
@@ -72,7 +72,7 @@ var serveACheekyFile = (path, staticPath, fileBuffer) => {
   var extension = mime.extension(contentType); 
 
   //3. If it isn't a standard file, then base64 encode it. 
-  var shouldEncode = standardExtensions.indexOf(extension) < 0;
+  var shouldEncode = stringyExtensions.indexOf(extension) < 0;
 
   //4. Determine if the item is fingerprinted/cacheable
   var shouldCache = staticPath.includes(defaults.assetsPath);
@@ -99,7 +99,7 @@ var serveACheekyFile = (path, staticPath, fileBuffer) => {
 
   console.log('INFO: contentType:', contentType);
   console.log('INFO: extension:', extension);
-  console.log('INFO: standardExtensions:', standardExtensions);
+  console.log('INFO: stringyExtensions:', stringyExtensions);
   console.log('INFO: shouldEncode:', shouldEncode);
   console.log('INFO: shouldCache:', shouldCache);
   console.log('INFO: encoding:', encoding);
