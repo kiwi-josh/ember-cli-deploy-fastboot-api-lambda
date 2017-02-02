@@ -1,6 +1,9 @@
 # ember-cli-deploy-fastboot-api-lambda
 
+[![npm version](https://badge.fury.io/js/ember-cli-deploy-fastboot-api-lambda.svg)](https://badge.fury.io/js/ember-cli-deploy-fastboot-api-lambda)
+
 An ambitious ember-cli-deploy plugin for serving Ember FastBoot Applications entirely from within AWS Lambda/API Gateway (assets and all!).
+
 
 ## Background
 API Gateway [now supports the handling binary payloads](https://aws.amazon.com/about-aws/whats-new/2016/11/binary-data-now-supported-by-api-gateway/), which means an end-to-end fastboot hosting solution can now be achieved through API gateway and Lambda without the use of S3 for serving static files. This is what this addon aims to achieve.
@@ -25,48 +28,66 @@ ember install ember-cli-deploy-fastboot-api-lambda
 ```
 // config/deploy.js
 ENV['fastboot-api-lambda'] = {
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,         // (Required) AWS accessKeyId (must have permission to deploy lambda functions)
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, // (Required) AWS secretAccessKey
+  lambdaFunction: 'my-ember-app',                     // (Required) Lambda functions name
+  region: 'us-east-1',                                // (Required) Region where lambda is deployed
 
-  lambdaFunction: 'my-ember-app', // Lambda functions name
-  region: 'us-east-1' // Region where lambda is deployed
+  fallbackPath: '/'                                   // (optional) The route that will be attempted if the current route fails. i.e. doesn't exist, fails etc.
+  stringyExtensions: [                                // (optional) The file extensions that will be treated as text and not binary. Defaults are shown. Any additional items will be concatenated to this list.
+    'html',
+    'css',
+    'js',
+    'json',
+    'xml',
+    'ico',
+    'txt',
+    'map'
+  ],
+  validAssetPaths: [                                  // (optional) The assets paths that the lambda is explicitly allow serve. Defaults are shown. Any additional items will be concatenated to this list.
+    '/assets/',
+    '/robots.txt',
+    '/humans.txt',
+    '/crossdomain.xml',
+    '/sitemap.xml'
+  ]
 };
 ```
 
 * Create the lambda function
-		
-	* Open the [AWS Lambda console](https://console.aws.amazon.com/lambda). 
-	* Select the region that you defined in your deploy variables above.
-	* Create a blank lambda, with the name you defined in your deploy variables above.
-		* Handler => `index.handler`.
-		* Role => `Create a custom role`. Give it a name and use the default policy document.
-		* Memory => `128`.
-		* Timeout => `30 seconds`.
-	* Select `Next` and then select `Create function`. 
+    
+  * Open the [AWS Lambda console](https://console.aws.amazon.com/lambda). 
+  * Select the region that you defined in your deploy variables above.
+  * Create a blank lambda, with the name you defined in your deploy variables above.
+    * Handler => `index.handler`.
+    * Role => `Create a custom role`. Give it a name and use the default policy document.
+    * Memory => `128`.
+    * Timeout => `30 seconds`.
+  * Select `Next` and then select `Create function`. 
 
 * Create the API Gateway Proxy
-	
-	* Open the [AWS API Gateway console](https://console.aws.amazon.com/apigateway). 
-	* Select the region that you defined in your deploy variables above.
-	* Select `New API` and give it a name
-	* Select Binary Support. Click `Edit`. Add `*/*` and click `Save`.
-	* Create proxy method:
-		* Under resources, click `/`, then click `Actions => Create Method`. Select `Any`.
-		* Click the `Any label`, choose Integration type `lambda`, check the `Use Lambda Proxy integration` checkbox, and finally select your lambda function's region and name.
-	* Create proxy resource:
-		* Under resources, click `/`, then click `Actions => Create Resource`. Select `Any`.
-		* Select `Configure as proxy resource`, and select `Enable API Gateway CORS`.
-		* Select Integration type `Lambda Function Proxy`, and finally select your lambda function's region and name.
-	* Under resources, click `Actions => Deploy API`. Select a new stage and give it the name `fastboot`. Hit `Deploy`. You will now see the `Invoke URL`. This is where you site will be hosted.
+  
+  * Open the [AWS API Gateway console](https://console.aws.amazon.com/apigateway). 
+  * Select the region that you defined in your deploy variables above.
+  * Select `New API` and give it a name
+  * Select Binary Support. Click `Edit`. Add `*/*` and click `Save`.
+  * Create proxy method:
+    * Under resources, click `/`, then click `Actions => Create Method`. Select `Any`.
+    * Click the `Any label`, choose Integration type `lambda`, check the `Use Lambda Proxy integration` checkbox, and finally select your lambda function's region and name.
+  * Create proxy resource:
+    * Under resources, click `/`, then click `Actions => Create Resource`. Select `Any`.
+    * Select `Configure as proxy resource`, and select `Enable API Gateway CORS`.
+    * Select Integration type `Lambda Function Proxy`, and finally select your lambda function's region and name.
+  * Under resources, click `Actions => Deploy API`. Select a new stage and give it the name `fastboot`. Hit `Deploy`. You will now see the `Invoke URL`. This is where you site will be hosted.
 
 * Ember Application
-	* The `rootURL` must match the stage name you selected when creating the api gateway. Otherwise the `link-to` helper wont work.
-	```
-	// config/environment.js
-	var ENV = {
-		rootURL: '/fastboot/'
+  * The `rootURL` must match the stage name you selected when creating the api gateway. Otherwise the `link-to` helper wont work.
+  ```
+  // config/environment.js
+  var ENV = {
+    rootURL: '/fastboot/'
   }
-	```
+  ```
 
 * Configuration is done! 🎉
 
