@@ -61,35 +61,36 @@ var app = new FastBoot({ distPath: distPath });
 
 var serveACheekyFile = (path, staticPath, fileBuffer) => {
   // 1. Early exit bail
-  var isAssetValidPath = validAssetPaths.find(p => p.includes(path));
+  var isAssetValidPath = validAssetPaths.find(p => path.includes(p));
+  console.log('INFO validAssetPaths:', validAssetPaths);
   console.log('INFO isAssetValidPath:', isAssetValidPath);
   if (!isAssetValidPath) { throw true; }
 
-  // 1. Look up files content type.
+  // 2. Look up files content type.
   var contentType = mime.lookup(staticPath);
 
-  //2. Get file extension.
+  //3. Get file extension.
   var extension = mime.extension(contentType); 
 
-  //3. If it isn't a standard file, then base64 encode it. 
+  //4. If it isn't a standard file, then base64 encode it. 
   var shouldEncode = stringyExtensions.indexOf(extension) < 0;
 
-  //4. Determine if the item is fingerprinted/cacheable
+  //5. Determine if the item is fingerprinted/cacheable
   var shouldCache = staticPath.includes(defaults.assetsPath);
 
-  //5. Set encoding value
+  //6. Set encoding value
   var encoding = shouldEncode ? 'base64' : 'utf8';
 
-  //6. Create headers
+  //7. Create headers
   var headers = {
     'Content-Type': contentType,
     'Cache-Control': shouldCache ? fancyACacheYeh.yes : fancyACacheYeh.no
   };
 
-  //7. Create body
+  //8. Create body
   var body = fileBuffer.toString(encoding);
 
-  //8. Create final output
+  //9. Create final output
   var payload = {
     statusCode: 200,
     headers: headers,
