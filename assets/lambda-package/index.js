@@ -32,7 +32,9 @@ var defaults = {
     '/robots.txt',
     '/humans.txt',
     '/crossdomain.xml',
-    '/sitemap.xml'
+    '/sitemap.xml',
+    '/sw-registration.js',
+    '/sw.js'
   ],
   headers: {
     'Content-Type': 'text/html;charset=UTF-8',
